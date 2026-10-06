@@ -1,0 +1,42 @@
+﻿@page
+@model MyOnlineCv.Pages.ExperienceModel
+@{
+    ViewData["Title"] = "Experience";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <h2 class="mb-3">Projects & Work Experience</h2>
+        <p class="text-muted">A summary of backend software engineering projects and technical roles.</p>
+        <hr />
+
+        <div class="card p-4 shadow-sm mb-4 border-0 bg-light">
+            <h4 class="text-primary">Gatherly — Event Management & Ticketing System</h4>
+            <p class="text-secondary mb-2"><strong>Stack:</strong> C#, ASP.NET Core Web API, Entity Framework Core, SQL Server, Onion Architecture</p>
+            <ul>
+                <li>Architected scalable RESTful Web APIs following <strong>Onion Architecture</strong> principles.</li>
+                <li>Implemented Repository and Unit of Work patterns for clean code separation.</li>
+                <li>Designed database schemas using EF Core Code-First migrations and built secure authentication endpoints.</li>
+            </ul>
+        </div>
+
+        <div class="card p-4 shadow-sm mb-4 border-0 bg-light">
+            <h4 class="text-primary">Bincom Academy — C# Console & Cloud Services</h4>
+            <p class="text-secondary mb-2"><strong>Stack:</strong> C#, Microsoft Azure, Azure WebJobs, Git, GitHub</p>
+            <ul>
+                <li>Developed modular C# console applications handling background analytical processing.</li>
+                <li>Configured and deployed background tasks using <strong>Azure WebJobs</strong> and Azure App Services.</li>
+                <li>Managed collaborative Git workflows, code reviews, and version control branching.</li>
+            </ul>
+        </div>
+
+        <div class="card p-4 shadow-sm mb-4 border-0 bg-light">
+            <h4 class="text-primary">Conclase Academy — Backend Software Engineering</h4>
+            <p class="text-secondary mb-2"><strong>Stack:</strong> C#, Object-Oriented Programming, Data Structures, LINQ</p>
+            <ul>
+                <li>Built core domain services utilizing SOLID design principles and asynchronous programming (`async/await`).</li>
+                <li>Optimized data processing pipelines with LINQ queries and relational database operations.</li>
+            </ul>
+        </div>
+    </div>
+</div>

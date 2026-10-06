@@ -1,0 +1,41 @@
+﻿@page
+@model MyOnlineCv.Pages.SkillsModel
+@{
+    ViewData["Title"] = "Skills";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <h2 class="mb-3">Technical Competencies</h2>
+        <p class="text-muted">Core skills, tools, and technologies used in everyday backend engineering.</p>
+        <hr />
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 p-4 shadow-sm">
+                    <h4 class="text-primary">Languages & Frameworks</h4>
+                    <hr />
+                    <ul>
+                        <li><strong>C# & .NET Core:</strong> Advanced OOP, Async/Await, LINQ</li>
+                        <li><strong>ASP.NET Core:</strong> RESTful Web APIs, Razor Pages, Middleware</li>
+                        <li><strong>ORM:</strong> Entity Framework Core (Code-First / Migrations)</li>
+                        <li><strong>Architecture:</strong> Onion Architecture, Repository Pattern, Dependency Injection</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 p-4 shadow-sm">
+                    <h4 class="text-primary">Databases & Cloud</h4>
+                    <hr />
+                    <ul>
+                        <li><strong>Databases:</strong> Microsoft SQL Server, T-SQL Queries</li>
+                        <li><strong>Cloud:</strong> Microsoft Azure App Service, Azure WebJobs</li>
+                        <li><strong>Dev Tools:</strong> Git, GitHub, Visual Studio, VS Code</li>
+                        <li><strong>API Testing:</strong> Postman, Swagger / OpenAPI</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

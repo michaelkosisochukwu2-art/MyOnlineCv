@@ -1,0 +1,50 @@
+﻿@page
+@model MyOnlineCv.Pages.TaxCalculatorModel
+@{
+    ViewData["Title"] = "Tax Calculator";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-3">Nigerian PAYE Tax Calculator</h2>
+        <p class="text-muted">Calculate your annual and monthly Personal Income Tax based on current Nigerian tax regulations.</p>
+        <hr />
+
+        <form method="post" class="card p-4 shadow-sm mb-4 border-0 bg-light">
+            <div class="mb-3">
+                <label for="GrossAnnualIncome" class="form-label fw-bold">Gross Annual Income (₦)</label>
+                <input type="number" step="0.01" class="form-control form-control-lg" id="GrossAnnualIncome" name="GrossAnnualIncome" value="@Model.GrossAnnualIncome" required placeholder="e.g. 5000000" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">Calculate Tax</button>
+        </form>
+
+        @if (Model.IsCalculated)
+        {
+            <div class="card p-4 shadow-sm border-success">
+                <h4 class="text-success mb-3">Tax Breakdown Result</h4>
+                <ul class="list-group list-group-flush mb-0">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Gross Annual Salary:</span>
+                        <strong>₦@Model.GrossAnnualIncome.ToString("N2")</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Consolidated Relief Allowance (CRA):</span>
+                        <strong>₦@Model.ConsolidatedRelief.ToString("N2")</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Taxable Income:</span>
+                        <strong>₦@Model.TaxableIncome.ToString("N2")</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center text-danger fw-bold fs-5">
+                        <span>Total Annual Tax:</span>
+                        <span>₦@Model.AnnualTax.ToString("N2")</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center text-danger fw-bold fs-5">
+                        <span>Monthly Tax Deduction:</span>
+                        <span>₦@Model.MonthlyTax.ToString("N2")</span>
+                    </li>
+                </ul>
+            </div>
+        }
+    </div>
+</div>
