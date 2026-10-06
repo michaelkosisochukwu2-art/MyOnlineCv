@@ -2,47 +2,45 @@ trigger:
   - master
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 variables:
   buildConfiguration: 'Release'
 
-jobs:
-- job: BuildAndDeploy
-  displayName: 'Build and Deploy Job'
-  steps:
-  - task: UseDotNet@2
-    displayName: 'Use .NET 8 SDK'
-    inputs:
-      packageType: 'sdk'
-      version: '8.x'
+steps:
+- task: UseDotNet@2
+  displayName: 'Install .NET 8 SDK'
+  inputs:
+    packageType: 'sdk'
+    version: '8.0.x'
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Restore Dependencies'
-    inputs:
-      command: 'restore'
-      projects: '**/*.csproj'
+- task: DotNetCoreCLI@2
+  displayName: 'Build Project'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Build Application'
-    inputs:
-      command: 'build'
-      projects: '**/*.csproj'
-      arguments: '--configuration $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Project'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: true
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Publish Application'
-    inputs:
-      command: 'publish'
-      publishWebProjects: true
-      arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-      zipAfterPublish: true
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
 
-  - task: AzureRmWebAppDeployment@4
-    displayName: 'Deploy to Azure Web App'
-    inputs:
-      ConnectionType: 'AzureRM'
-      azureSubscription: 'Azure-AppService-Conn'
-      appType: 'webApp'
-      WebAppName: 'CarDealer'
-      packageForDeploy: '$(Build.ArtifactStagingDirectory)/*.zip'
+- task: AzureWebApp@1
+  displayName: 'Deploy to Azure App Service'
+  inputs:
+    azureSubscription: 'Azure-AppService-Conn'
+    appType: 'webApp'
+    appName: 'kosiso-online-cv'
+    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
