@@ -32,7 +32,7 @@ namespace MyOnlineCv.Pages
                     Directory.CreateDirectory(uploadsFolder);
                 }
 
-                var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(ImageUpload.FileName);
+                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(ImageUpload.FileName)}";
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -51,10 +51,9 @@ namespace MyOnlineCv.Pages
             if (Directory.Exists(uploadsFolder))
             {
                 var files = Directory.GetFiles(uploadsFolder);
-                foreach (var file in files)
-                {
-                    ImageUrls.Add("/uploads/" + Path.GetFileName(file));
-                }
+                ImageUrls = files
+                    .Select(file => "/uploads/" + Path.GetFileName(file))
+                    .ToList();
             }
         }
     }

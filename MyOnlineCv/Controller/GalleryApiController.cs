@@ -21,11 +21,13 @@ namespace MyOnlineCv.Controllers
         [HttpGet("items")]
         public async Task<IActionResult> GetGalleryItems()
         {
-            var items = await _context.GalleryItems.OrderByDescending(g => g.UploadedAt).ToListAsync();
+            var items = await _context.GalleryItems
+                .OrderByDescending(g => g.UploadedAt)
+                .ToListAsync();
+
             return Ok(items);
         }
 
-        // Apply [FromForm] to the DTO model instead of individual parameters
         [HttpPost("upload")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadImage([FromForm] ImageUploadRequest request)
@@ -39,7 +41,7 @@ namespace MyOnlineCv.Controllers
                 Directory.CreateDirectory(uploadsFolder);
             }
 
-            var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(request.File.FileName);
+            var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(request.File.FileName)}";
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
             using (var fileStream = new FileStream(filePath, FileMode.Create))
