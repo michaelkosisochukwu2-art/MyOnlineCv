@@ -21,19 +21,40 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
+// Auto-create/migrate Azure SQL Database on startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var dbContext = services.GetRequiredService<ApplicationDbContext>();
+
+        // Option A: If using EF Core Migrations (Recommended)
+        dbContext.Database.Migrate();
+
+        // Option B: If not using migrations (Keep if you prefer simple auto-creation)
+        // dbContext.Database.EnsureCreated();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while initializing the Azure SQL Database.");
+    }
+}
+
+// Configure HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
-// Enable Swagger UI in ALL environments (including Azure Production)
+// Enable Swagger UI (Accessible at /swagger)
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyOnlineCv API v1");
-    c.RoutePrefix = "swagger"; // Access UI at /swagger
+    c.RoutePrefix = "swagger";
 });
 
 app.UseHttpsRedirection();
@@ -45,21 +66,5 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();
-
-// Ensure Database & Tables are created automatically on Azure SQL Startup
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        var dbContext = services.GetRequiredService<ApplicationDbContext>();
-        dbContext.Database.EnsureCreated(); // Auto-creates tables in Azure SQL if missing
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while connecting or creating the Azure SQL Database.");
-    }
-}
 
 app.Run();
