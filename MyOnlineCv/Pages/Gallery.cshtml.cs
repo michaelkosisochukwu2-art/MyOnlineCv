@@ -41,18 +41,17 @@ namespace MyOnlineCv.Pages
                 return Page();
             }
 
-            // Get normalized web root path (fixes duplicate wwwroot on Azure)
             var webRoot = GetWebRootPath();
 
-            // Ensure uploads directory exists
             var uploadsFolder = Path.Combine(webRoot, "gallery_uploads");
-            // Remove any existing file named 'uploads' so that the directory can be created
+
+            // If a file unexpectedly exists with this name, delete it
             if (System.IO.File.Exists(uploadsFolder))
             {
                 System.IO.File.Delete(uploadsFolder);
             }
 
-            // Safely create the uploads directory
+            // Safely create the uploads directory inside wwwroot
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
@@ -100,7 +99,7 @@ namespace MyOnlineCv.Pages
         }
 
         /// <summary>
-        /// Safely resolves the wwwroot path across both local and Azure environments.
+        /// Resolves the static web root path.
         /// </summary>
         private string GetWebRootPath()
         {
@@ -111,11 +110,9 @@ namespace MyOnlineCv.Pages
                 webRoot = Path.Combine(_environment.ContentRootPath, "wwwroot");
             }
 
-            // Fix Azure path duplication (C:\home\site\wwwroot\wwwroot -> C:\home\site\wwwroot)
-            if (webRoot.EndsWith(@"wwwroot\wwwroot", StringComparison.OrdinalIgnoreCase) ||
-                webRoot.EndsWith("wwwroot/wwwroot", StringComparison.OrdinalIgnoreCase))
+            if (!Directory.Exists(webRoot))
             {
-                webRoot = _environment.ContentRootPath;
+                Directory.CreateDirectory(webRoot);
             }
 
             return webRoot;
