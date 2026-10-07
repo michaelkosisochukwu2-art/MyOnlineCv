@@ -41,17 +41,9 @@ namespace MyOnlineCv.Pages
                 return Page();
             }
 
-            var webRoot = GetWebRootPath();
+            var uploadsFolder = GetUploadsFolderPath();
 
-            var uploadsFolder = Path.Combine(webRoot, "gallery_uploads");
-
-            // If a file unexpectedly exists with this name, delete it
-            if (System.IO.File.Exists(uploadsFolder))
-            {
-                System.IO.File.Delete(uploadsFolder);
-            }
-
-            // Safely create the uploads directory inside wwwroot
+            // Ensure the persistent uploads directory exists
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
@@ -84,8 +76,10 @@ namespace MyOnlineCv.Pages
             var item = await _context.GalleryItems.FindAsync(id);
             if (item != null)
             {
-                var webRoot = GetWebRootPath();
-                var filePath = Path.Combine(webRoot, item.ImageUrl.TrimStart('/'));
+                var uploadsFolder = GetUploadsFolderPath();
+                var fileName = Path.GetFileName(item.ImageUrl);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
                 if (System.IO.File.Exists(filePath))
                 {
                     System.IO.File.Delete(filePath);
@@ -99,23 +93,17 @@ namespace MyOnlineCv.Pages
         }
 
         /// <summary>
-        /// Resolves the static web root path.
+        /// Resolves the persistent uploads directory outside wwwroot (C:\home\site\gallery_uploads on Azure).
+        /// This folder remains writable when WEBSITE_RUN_FROM_PACKAGE = 1 and survives deployments.
         /// </summary>
-        private string GetWebRootPath()
+        private string GetUploadsFolderPath()
         {
-            var webRoot = _environment.WebRootPath;
-
-            if (string.IsNullOrEmpty(webRoot))
+            var uploadsPath = Path.GetFullPath(Path.Combine(_environment.ContentRootPath, "..", "gallery_uploads"));
+            if (!Directory.Exists(uploadsPath))
             {
-                webRoot = Path.Combine(_environment.ContentRootPath, "wwwroot");
+                Directory.CreateDirectory(uploadsPath);
             }
-
-            if (!Directory.Exists(webRoot))
-            {
-                Directory.CreateDirectory(webRoot);
-            }
-
-            return webRoot;
+            return uploadsPath;
         }
     }
 }
