@@ -33,5 +33,5 @@ steps:
   inputs:
     azureSubscription: 'Azure-AppService-Connection'
     appType: 'webApp'
-    appName: 'YOUR-NEW-APP-SERVICE-NAME' # <--- Replace with your new App Service name
+    appName: 'my-online-cv-app'
     package: '$(Build.ArtifactStagingDirectory)/publish/**/*.zip'
