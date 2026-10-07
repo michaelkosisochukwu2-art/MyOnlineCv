@@ -33,5 +33,5 @@ steps:
   inputs:
     azureSubscription: 'Azure-AppService-Connection'
     appType: 'webApp'
-    appName: 'kosiso-online-cv'
+    appName: 'YOUR-NEW-APP-SERVICE-NAME' # <--- Replace with your new App Service name
     package: '$(Build.ArtifactStagingDirectory)/publish/**/*.zip'
