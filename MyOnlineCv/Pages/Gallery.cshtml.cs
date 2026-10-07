@@ -41,8 +41,11 @@ namespace MyOnlineCv.Pages
                 return Page();
             }
 
-            // Ensure wwwroot/uploads directory exists
-            var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
+            // Get normalized web root path (fixes duplicate wwwroot on Azure)
+            var webRoot = GetWebRootPath();
+
+            // Ensure uploads directory exists
+            var uploadsFolder = Path.Combine(webRoot, "uploads");
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
@@ -75,8 +78,8 @@ namespace MyOnlineCv.Pages
             var item = await _context.GalleryItems.FindAsync(id);
             if (item != null)
             {
-                // Delete physical file from disk if it exists
-                var filePath = Path.Combine(_environment.WebRootPath, item.ImageUrl.TrimStart('/'));
+                var webRoot = GetWebRootPath();
+                var filePath = Path.Combine(webRoot, item.ImageUrl.TrimStart('/'));
                 if (System.IO.File.Exists(filePath))
                 {
                     System.IO.File.Delete(filePath);
@@ -87,6 +90,28 @@ namespace MyOnlineCv.Pages
             }
 
             return RedirectToPage();
+        }
+
+        /// <summary>
+        /// Safely resolves the wwwroot path across both local and Azure environments.
+        /// </summary>
+        private string GetWebRootPath()
+        {
+            var webRoot = _environment.WebRootPath;
+
+            if (string.IsNullOrEmpty(webRoot))
+            {
+                webRoot = Path.Combine(_environment.ContentRootPath, "wwwroot");
+            }
+
+            // Fix Azure path duplication (C:\home\site\wwwroot\wwwroot -> C:\home\site\wwwroot)
+            if (webRoot.EndsWith(@"wwwroot\wwwroot", StringComparison.OrdinalIgnoreCase) ||
+                webRoot.EndsWith("wwwroot/wwwroot", StringComparison.OrdinalIgnoreCase))
+            {
+                webRoot = _environment.ContentRootPath;
+            }
+
+            return webRoot;
         }
     }
 }
