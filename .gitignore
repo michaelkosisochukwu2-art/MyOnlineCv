@@ -480,3 +480,10 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+
+# Ignore user uploads in the nested web project
+MyOnlineCv/wwwroot/user_uploads/*
+MyOnlineCv/wwwroot/gallery_uploads/*
+!MyOnlineCv/wwwroot/user_uploads/.gitkeep
+!MyOnlineCv/wwwroot/gallery_uploads/.gitkeep

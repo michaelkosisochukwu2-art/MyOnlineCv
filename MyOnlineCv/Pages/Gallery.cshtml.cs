@@ -45,7 +45,7 @@ namespace MyOnlineCv.Pages
             var webRoot = GetWebRootPath();
 
             // Ensure uploads directory exists
-            var uploadsFolder = Path.Combine(webRoot, "user_uploads");
+            var uploadsFolder = Path.Combine(webRoot, "gallery_uploads");
             // Remove any existing file named 'uploads' so that the directory can be created
             if (System.IO.File.Exists(uploadsFolder))
             {
@@ -70,7 +70,7 @@ namespace MyOnlineCv.Pages
             var item = new GalleryItem
             {
                 Title = string.IsNullOrWhiteSpace(Title) ? "Untitled" : Title,
-                ImageUrl = $"/user_uploads/{fileName}",
+                ImageUrl = $"/gallery_uploads/{fileName}",
                 UploadedAt = DateTime.UtcNow
             };
 
