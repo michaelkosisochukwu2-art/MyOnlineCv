@@ -46,6 +46,13 @@ namespace MyOnlineCv.Pages
 
             // Ensure uploads directory exists
             var uploadsFolder = Path.Combine(webRoot, "uploads");
+            // Remove any existing file named 'uploads' so that the directory can be created
+            if (System.IO.File.Exists(uploadsFolder))
+            {
+                System.IO.File.Delete(uploadsFolder);
+            }
+
+            // Safely create the uploads directory
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
