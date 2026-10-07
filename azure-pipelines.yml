@@ -25,8 +25,7 @@ steps:
   displayName: 'Publish Project'
   inputs:
     command: 'publish'
-    publishWebProjects: false
-    projects: '**/*.csproj'
+    publishWebProjects: true
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: true
 
@@ -40,7 +39,7 @@ steps:
 - task: AzureWebApp@1
   displayName: 'Deploy to Azure App Service'
   inputs:
-    azureSubscription: 'Azure-AppService-Conn'
+    azureSubscription: 'Azure-AppService-Connection'
     appType: 'webApp'
     appName: 'kosiso-online-cv'
     package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
